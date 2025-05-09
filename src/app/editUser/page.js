@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import {
@@ -10,69 +10,67 @@ import {
   Stack,
   FormControl,
   FormLabel,
-  Alert
+  Alert,
 } from "@mui/joy";
+import Box from "@mui/joy/Box";
 import NavBar from "../comp/nav";
 import Footer from "../comp/footer";
 
 export default function EditProfile() {
   const router = useRouter();
   const [formData, setFormData] = useState({
-    firstName: '',
-    lastName: '',
-    biography: '',
-    password: ''
+    firstName: "",
+    lastName: "",
+    biography: "",
+    password: "",
   });
-  const [user, setUser] = useState({ username: '', rating: 0 });
-  const [error, setError] = useState('');
+  const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
-  // Fetch user data on mount
+  // Fetch user data on component mount
   useEffect(() => {
     const fetchUser = async () => {
       try {
-        const response = await fetch('/api/auth/me', {
-          credentials: 'include'
+        const response = await fetch("/api/auth/me", {
+          credentials: "include",
         });
-        
-        if (!response.ok) throw new Error('Not authenticated');
-        
+
+        if (!response.ok) throw new Error("Not authenticated");
+
         const userData = await response.json();
-        setUser(userData);
         setFormData({
-          firstName: userData.firstName || '',
-          lastName: userData.lastName || '',
-          biography: userData.biography || '',
-          password: ''
+          firstName: userData.firstName || "",
+          lastName: userData.lastName || "",
+          biography: userData.biography || "",
+          password: "",
         });
       } catch (err) {
-        router.push('/login');
+        router.push("/login");
       }
     };
     fetchUser();
   }, [router]);
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  const handleSubmit = async (event) => {
+    event.preventDefault();
     setLoading(true);
-    setError('');
+    setError("");
 
     try {
-      const response = await fetch('/api/profile', {
-        method: 'PUT',
+      const response = await fetch("/api/profile", {
+        method: "PUT",
         headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${document.cookie.split('token=')[1]}`
+          "Content-Type": "application/json",
         },
-        body: JSON.stringify(formData)
+        body: JSON.stringify(formData),
       });
 
       if (!response.ok) {
         const errorData = await response.json();
-        throw new Error(errorData.error || 'Failed to update profile');
+        throw new Error(errorData.error || "Failed to update profile");
       }
 
-      router.push('/profile');
+      router.push("/profile");
     } catch (err) {
       setError(err.message);
       setLoading(false);
@@ -82,16 +80,26 @@ export default function EditProfile() {
   return (
     <>
       <NavBar />
-      <Box sx={{ maxWidth: 800, mx: 'auto', my: 4, p: 2 }}>
-        <Card sx={{ p: 3 }}>
-          <Typography level="h3" sx={{ mb: 2 }}>Edit Profile</Typography>
-          
-          <Stack direction="row" spacing={2} sx={{ mb: 3 }}>
-            <Typography>Username: <strong>{user.username}</strong></Typography>
-            <Typography>Rating: {user.rating}</Typography>
-          </Stack>
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          minHeight: "100vh",
+          width: "100%",
+          px: 2,
+        }}
+      >
+        <Card sx={{ width: "600px" }}>
+          <Typography level="h3" sx={{ mb: 2 }}>
+            Edit Profile
+          </Typography>
 
-          {error && <Alert color="danger" sx={{ mb: 2 }}>{error}</Alert>}
+          {error && (
+            <Alert color="danger" sx={{ mb: 2 }}>
+              {error}
+            </Alert>
+          )}
 
           <form onSubmit={handleSubmit}>
             <Stack spacing={2}>
@@ -100,7 +108,9 @@ export default function EditProfile() {
                 <Input
                   name="firstName"
                   value={formData.firstName}
-                  onChange={(e) => setFormData({...formData, firstName: e.target.value})}
+                  onChange={(e) =>
+                    setFormData({ ...formData, firstName: e.target.value })
+                  }
                 />
               </FormControl>
 
@@ -109,7 +119,9 @@ export default function EditProfile() {
                 <Input
                   name="lastName"
                   value={formData.lastName}
-                  onChange={(e) => setFormData({...formData, lastName: e.target.value})}
+                  onChange={(e) =>
+                    setFormData({ ...formData, lastName: e.target.value })
+                  }
                 />
               </FormControl>
 
@@ -118,7 +130,9 @@ export default function EditProfile() {
                 <Textarea
                   name="biography"
                   value={formData.biography}
-                  onChange={(e) => setFormData({...formData, biography: e.target.value})}
+                  onChange={(e) =>
+                    setFormData({ ...formData, biography: e.target.value })
+                  }
                   minRows={4}
                 />
               </FormControl>
@@ -129,18 +143,20 @@ export default function EditProfile() {
                   name="password"
                   type="password"
                   value={formData.password}
-                  onChange={(e) => setFormData({...formData, password: e.target.value})}
+                  onChange={(e) =>
+                    setFormData({ ...formData, password: e.target.value })
+                  }
                   placeholder="Leave blank to keep current password"
                 />
               </FormControl>
 
-              <Button 
-                type="submit" 
+              <Button
+                type="submit"
                 loading={loading}
                 disabled={loading}
                 sx={{ mt: 2 }}
               >
-                {loading ? 'Saving...' : 'Save Changes'}
+                {loading ? "Saving..." : "Save Changes"}
               </Button>
             </Stack>
           </form>
