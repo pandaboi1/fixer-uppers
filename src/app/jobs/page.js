@@ -227,14 +227,14 @@ export default function Jobs() {
 	const [openStar, setOpenStar] = useState(true);
 	const [selectedStar, setSelectedStar] = useState([]);
 
-	const [avilableJobs, setAvavailableJobs] = useState(null);
+	const [availableJobs, setAvailableJobs] = useState(null);
 	const [isLoading, setLoading] = useState(true);
 
 	useEffect(() => {
 		fetch("/api/jobs/")
 			.then((res) => res.json())
 			.then(({ jobRequests }) => {
-				setAvavailableJobs(jobRequests);
+				setAvailableJobs(jobRequests);
 				setLoading(false);
 			});
 	}, []);
@@ -604,7 +604,7 @@ export default function Jobs() {
 					>
 						{!isLoading ? (
 							<>
-								{avilableJobs.map((job) => (
+								{availableJobs.map((job) => (
 									<Grid
 										key={job.rid}
 										sx={{

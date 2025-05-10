@@ -30,6 +30,7 @@ export default function CreateJob() {
 		location: "",
 		jobDescription: "",
 		offeredPrice: "",
+		jobType: "",
 	});
 	const [user, setUser] = useState({ username: "", rating: 0 }); // User context
 	const [error, setError] = useState(""); // Error message state
@@ -76,13 +77,14 @@ export default function CreateJob() {
 				jobDescription: form.jobDescription.value,
 				location: form.location.value,
 				offeredPrice: form.offeredPrice.value,
+				jobType: form.jobType.value,
 			}), // Send form data as JSON
 		});
 
 		if (response.ok) {
 			router.push("/myjobs");
 		} else {
-			const data = await res.json();
+			const data = await response.json();
 			console.error("Error on job creation: ", data.error);
 		}
 	};
@@ -150,6 +152,21 @@ export default function CreateJob() {
 										setFormData({
 											...formData,
 											location: e.target.value,
+										})
+									}
+								/>
+							</FormControl>
+
+							{/* JobType input */}
+							<FormControl required>
+								<FormLabel>Job Type</FormLabel>
+								<Input
+									name="jobType"
+									value={formData.jobType}
+									onChange={(e) =>
+										setFormData({
+											...formData,
+											jobType: e.target.value,
 										})
 									}
 								/>

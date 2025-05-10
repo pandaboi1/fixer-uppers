@@ -4,7 +4,7 @@ import { jwtVerify } from "jose";
 const JWT_SECRET = process.env.JWT_SECRET;
 const secretKey = new TextEncoder().encode(JWT_SECRET);
 
-const protectedPaths = ["/api/users", "/api/jobs", "/myjobs"];
+const protectedPaths = ["/api/users", "/api/jobs", "/myjobs", "/createjob"];
 
 export async function middleware(request) {
 	const pathname = request.nextUrl.pathname;
@@ -38,5 +38,5 @@ export async function middleware(request) {
 }
 
 export const config = {
-	matcher: ["/api/users/:id", "/api/jobs/:id?", "/myjobs"],
+	matcher: ["/api/users/:id", "/api/jobs/:id?", "/myjobs", "/createjob"],
 };
