@@ -18,7 +18,7 @@ export async function POST(request) {
 		);
 	}
 
-	const user = db.prepare("SELECT * FROM users WHERE uemail = ?").get(email);
+	const user = db.prepare("SELECT * FROM Users WHERE uemail = ?").get(email);
 
 	if (!user) {
 		return NextResponse.json(
@@ -28,6 +28,7 @@ export async function POST(request) {
 	}
 
 	const passwordHash = await bcrypt.compare(password, user.upassword);
+	// const isPasswordCorrect = password === user.upassword;
 
 	if (!passwordHash) {
 		return NextResponse.json(
@@ -40,6 +41,7 @@ export async function POST(request) {
 		uid: user.uid,
 		username: user.username,
 		uemail: user.uemail,
+		ufirstname: user.ufirstname,
 	})
 		.setProtectedHeader({ alg: "HS256" })
 		.setExpirationTime("7 days")

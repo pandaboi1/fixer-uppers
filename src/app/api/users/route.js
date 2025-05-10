@@ -57,12 +57,13 @@ export async function POST(request) {
 			cid: createdContractorId,
 		});
 	}
-
+	console.log("test?");
 	return NextResponse.json({
 		message: "User created successfully.",
 		uid: createdUserId,
 	});
 }
+
 
 export async function PUT(request) {
 	// todo: clean this up if its messy

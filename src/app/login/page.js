@@ -20,6 +20,11 @@ const logo = "logo.svg";
 
 export default function JoySignInSideTemplate() {
 	const router = useRouter();
+	
+	// Home redirect
+  const handleClickHome = () => {
+    router.push('../')
+  }
 
 	const submitForm = async (event) => {
 		event.preventDefault();
@@ -39,7 +44,7 @@ export default function JoySignInSideTemplate() {
 		// at the end if everything is good then we just go
 		// redirect the user to localhost:3000/myjobs
 		if (res.ok) {
-			router.push("/myjobs");
+			router.push("../");
 		} else {
 			const data = await res.json();
 			console.error("Error on login: ", data.error);
@@ -98,6 +103,7 @@ export default function JoySignInSideTemplate() {
 							}}
 						>
 							<Image
+                onClick={handleClickHome}
 								style={{ padding: 10, marginRight: 10 }}
 								src={logo}
 								alt="Fixer-Uppers logo"
@@ -142,6 +148,7 @@ export default function JoySignInSideTemplate() {
 					>
 						<Box sx={{ display: "flex", justifyContent: "center" }}>
 							<Image
+                onClick={handleClickHome}
 								style={{ padding: 10, marginRight: 10 }}
 								src={logo}
 								alt="Fixer-Uppers logo"

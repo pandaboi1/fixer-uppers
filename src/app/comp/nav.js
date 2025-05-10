@@ -1,70 +1,76 @@
-// src/app/comp/page.js
+'use client';
 
-//----------------------------------------------
-// Using PascelCasing for page names
-//----------------------------------------------
-'use client'
+import { useEffect, useState } from "react";
 import Image from "next/image";
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
-import { useRouter } from 'next/navigation'
+import { useRouter } from 'next/navigation';
 
-const Fixer_Upper_Logo = "logo.svg";
+const FixerUpperLogo = "/logo.svg";
 
 export default function NavBar() {
-  
-    // Handeling the redirect to the signup page
-    const redirect = useRouter()
+  const [user, setUser] = useState(null);
+  const router = useRouter();
 
-    // Home redirect
-    const handleClickHome = () => {
-      redirect.push('../')
-    }
-    // Login redirect
-    const handleClickLogin = () => {
-      redirect.push('/login')
-    }
-    // Sign up redirect
-    const handleClickSignUp = () => {
-      redirect.push('/signup')
-    }
+  useEffect(() => {
+    const fetchUser = async () => {
+      try {
+        const res = await fetch('/auth/me');
+        const data = await res.json();
+        console.log('Fetched user data:', data);
+        setUser(data.user);
+      } catch {
+        setUser(null);
+      }
+    };
+    fetchUser();
+  }, []);
+
+  const handleClickHome = () => router.push('/');
+  const handleClickLogin = () => router.push('/login');
+  const handleClickSignUp = () => router.push('/signup');
 
   return (
-      
     <Box sx={{ flexGrow: 1 }}>
-      <AppBar color="primary" style={{position: "fixed" , backgroundColor: "#1a1a1a"}}>
-        <Toolbar style={{paddingTop: "10px", paddingBottom: "10px"}}>
-          
-          {/* Logo */}
+      <AppBar position="fixed" sx={{ backgroundColor: "#1a1a1a" }}>
+        <Toolbar sx={{ py: "10px" }}>
           <Image
             onClick={handleClickHome}
-            className="dark"
-            style={{padding: "10px", marginRight: "10px"}}
-            src={Fixer_Upper_Logo}
-            alt="fixer-uppers logo"
+            role="button"
+            aria-label="Go to homepage"
+            style={{ padding: "10px", marginRight: "10px", cursor: "pointer" }}
+            src={FixerUpperLogo}
+            alt="Fixer-Uppers logo"
             width={100}
             height={100}
             priority
           />
-          {/* Company Name */}
-          <h1 className="text-2xl font-bold text-white" >Fixer-Uppers</h1>
-          
+          <h1 className="text-2xl font-bold text-white">Fixer-Uppers</h1>
+          <Typography sx={{ flexGrow: 2 }} />
 
-          <Typography
-          variant="h6" 
-          component="div" 
-          sx={{ flexGrow: 2 }}>
-          </Typography>
-
-          <Button style={{color: "#87CB28", marginLeft: "10px", marginRight: "10px"}} color="inherit" onClick={handleClickLogin}>login</Button>
-            
-          <Button style={{backgroundColor: "#87CB28", marginLeft: "10px", marginRight: "10px"}} color="inherit" variant="contained" onClick={handleClickSignUp}>Sign Up</Button>
+          {user ? (
+            <Typography sx={{ color: "#87CB28", mr: 2 }}>
+              Hello, {user.ufirstname}
+            </Typography>
+          ) : (
+            <>
+              <Button sx={{ color: "#87CB28", mx: 1 }} onClick={handleClickLogin}>
+                Login
+              </Button>
+              <Button
+                sx={{ backgroundColor: "#87CB28", mx: 1 }}
+                variant="contained"
+                onClick={handleClickSignUp}
+              >
+                Sign Up
+              </Button>
+            </>
+          )}
         </Toolbar>
       </AppBar>
     </Box>
   );
 }
-
