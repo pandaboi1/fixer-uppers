@@ -33,6 +33,23 @@ export default function NavBar() {
   const handleClickLogin = () => router.push('/login');
   const handleClickSignUp = () => router.push('/signup');
 
+  const handleLogout = async () => {
+    try {
+      const res = await fetch('/auth/logout', {
+        method: 'POST',
+      });
+
+      if (res.ok) {
+        setUser(null);
+        router.push('../');
+      } else {
+        console.error('Logout failed');
+      }
+    } catch (error) {
+      console.error('Logout error:', error);
+    }
+  };
+
   return (
     <Box sx={{ flexGrow: 1 }}>
       <AppBar position="fixed" sx={{ backgroundColor: "#1a1a1a" }}>
@@ -52,9 +69,18 @@ export default function NavBar() {
           <Typography sx={{ flexGrow: 2 }} />
 
           {user ? (
-            <Typography sx={{ color: "#87CB28", mr: 2 }}>
-              Hello, {user.ufirstname}
-            </Typography>
+            <>
+              <Typography sx={{ color: "#87CB28", mr: 2 }}>
+                Hello, {user.ufirstname}
+              </Typography>
+              <Button
+                sx={{ color: "#ffffff", backgroundColor: "#ff5252", mx: 1 }}
+                variant="contained"
+                onClick={handleLogout}
+              >
+                Logout
+              </Button>
+            </>
           ) : (
             <>
               <Button sx={{ color: "#87CB28", mx: 1 }} onClick={handleClickLogin}>

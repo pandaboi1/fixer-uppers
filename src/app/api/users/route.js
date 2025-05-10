@@ -6,10 +6,10 @@ import bcrypt from "bcrypt";
 // POST: /api/users/
 // Create a new user to the database given a username, uemail and upassword
 export async function POST(request) {
-	const { username, email, password, isContractor, jobType } =
+	const { username, email, password, isContractor, jobType, firstName } =
 		await request.json();
 
-	if (!username || !email || !password) {
+	if (!username || !email || !password || !firstName) {
 		return NextResponse.json(
 			{ error: "Missing user creation fields." },
 			{ status: 400 }
@@ -30,9 +30,9 @@ export async function POST(request) {
 	const passwordHash = await bcrypt.hash(password, 12);
 
 	const createUser = db.prepare(
-		"INSERT INTO Users (username, uemail, upassword) VALUES (?, ?, ?)"
+		"INSERT INTO Users (username, uemail, upassword, ufirstname) VALUES (?, ?, ?, ?)"
 	);
-	const userResult = createUser.run(username, email, passwordHash);
+	const userResult = createUser.run(username, email, passwordHash, firstName);
 	const createdUserId = userResult.lastInsertRowid;
 
 	if (isContractor) {

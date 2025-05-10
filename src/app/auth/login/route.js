@@ -28,7 +28,6 @@ export async function POST(request) {
 	}
 
 	const passwordHash = await bcrypt.compare(password, user.upassword);
-	// const isPasswordCorrect = password === user.upassword;
 
 	if (!passwordHash) {
 		return NextResponse.json(
@@ -47,11 +46,14 @@ export async function POST(request) {
 		.setExpirationTime("7 days")
 		.sign(secretKey);
 
-	const cookieStore = await cookies();
-	cookieStore.set("token", token, {
-		httpOnly: true,
-		maxAge: 60 * 60 * 24 * 7,
-	});
+		const cookieStore = await cookies(); 
+		cookieStore.set("token", token, {
+			httpOnly: true,
+			maxAge: 60 * 60 * 24 * 7, // 7 days
+			path: '/', 
+			sameSite: 'lax', 
+		});
+		
 
 	return NextResponse.json({
 		message: "User has been logged in successfully.",
